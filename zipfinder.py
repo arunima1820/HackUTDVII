@@ -22,12 +22,94 @@ del zip["state"]
 zip.head()
 
 def search_zip(zipcode): 
-  zipcode = int(zipcode)
-  usr = zip.loc[zip['zip_code'] == zipcode]
+  zip["zip_code"] = zip["zip_code"].apply(str)
+  usr = zip.loc[zip['zip_code'] == str(zipcode)]
   city = usr["city"]
   city = str(city)
   usrlist = usr.values.tolist()
   city = usrlist[0][2]
   zone = usrlist[0][1]
+  print()
   zipout = ('Based on your Zip Code, we found that you live in',city, ' and your USDA Plant Hardiness Zone is:', zone )
   return city, zone
+
+    
+def parseZone(zone):
+  plant = pd.read_csv("./querytodo.csv") #loading test datat
+  plant["in_zone"]= plant["zone-specific?"].str.find(zone) 
+  plant = plant[plant.in_zone != -1.0]
+  del plant["in_zone"]
+  return plant
+
+def parseSkillLevel(level, plant):
+    plant["Difficulty"] = plant["Difficulty"].apply(str)
+    if(level == "Beginner"):
+        level = 0;
+        plant = plant[plant.Difficulty == str(level)]
+    else:
+        level = 1;
+    return plant
+
+def parseFreezeLevel(freezeproof, plant):
+    if(freezeproof == 1):
+        plant = plant[plant.FreezeProof_BIN == 1]
+    return plant
+
+def parseIndoors(indoorval, plant):
+    if(len(indoorval) == 0):
+        return plant
+    if(len(indoorval) > 1):
+        indoorval = [0,1]
+    elif(indoorval[0] == "Indoors"):
+        indoorval = [1]
+    else:
+        indoorval = [0]
+            
+    #plant["indoors"] = plant["indoors"].str()
+    plant = plant[plant.indoors.isin(indoorval)]
+    return plant
+
+def parseSpace(space, plant):
+    if space == 'Not much':
+        space = 0
+    elif space == 'Decent':
+        space = 1
+    else:
+        space = 2
+    #plant["space"] = plant["space"].str()
+    plant = plant[plant.space == space]
+    return plant
+
+def parseHarvest(harvest, plant):
+    if(harvest < 2):
+        harvest = 0
+        plant = plant[plant.harvest_time == harvest]
+    elif(harvest >6):
+        harvest = 2
+        plant = plant
+    else:
+        harvest=1 
+        plant = plant[plant.harvest_time ==2]
+    #plant["harvest_time"] = plant["harvest_time    "].str()
+    #plant = plant[plant.harvest_time != harvest]
+    return plant
+
+def checkEnemies(plant):
+    hello = list(plant.index)
+    hello = str(hello)
+    #print(hello)
+    conflicts = []
+    plant["enemyck"]= plant["enemies"]
+    for i in range(len(hello)):
+        plant["enemyck"]= plant["enemies"].str.find(hello[i]) 
+        conflicts = plant[plant["enemyck"] == 0.0]
+        
+    return conflicts
+
+    #indices = plant.index
+    #for plants in plant.iterrows():
+        #indices.append(plants.index)
+    #    curr_enemies = plants["enemies"]
+    #return indices
+
+checkEnemies(testsubmission)
