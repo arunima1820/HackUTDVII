@@ -11,7 +11,7 @@ import Questionnaire from './questionnaire/questions'
 
 export default function Home() {
     const [open, setOpen] = useState(false);
-    const [userData, setUserData] = useState();
+    const [userData, setUserData] = useState('');
 
     const handleBtnClick = () => {
         setOpen(true);

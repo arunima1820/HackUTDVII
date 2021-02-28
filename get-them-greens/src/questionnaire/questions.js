@@ -4,18 +4,19 @@ import {
     Typography,
     Stepper,
     Step,
-    StepLabel
+    StepLabel,
+    TextField,
+    FormGroup
 } from "@material-ui/core"
 
 export default function Questionnaire(props) {
-    const {userData} = props
-    const [step, setStep] = useState(0);
+    const {setUserData} = props
 
     return (
         <>
-            <Form>
-                
-            </Form>
+            <FormGroup>
+                <TextField label="Enter ZIP Code" onChange={setUserData} />
+            </FormGroup>
         </>
     )
 }
