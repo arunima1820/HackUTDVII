@@ -2,6 +2,7 @@
 """
 Created on Sun Feb 28 03:39:31 2021
 
+@author: vjm180001
 """
 
 
@@ -17,6 +18,8 @@ df2 = pd.read_csv('./querytodo.csv', sep = ',')
 del df2 ["freezeproof"]
 
 import zipfinder
+import googlemaps
+import ebaysearch
 
 
 #st.sidebar.image("https://github.com/arunima1820/HackUTDVII/blob/main/getthemgreens.PNG")
@@ -66,5 +69,16 @@ user_selected_plants = st.multiselect(label="Select the plants you'd be interest
 #user_selected_plants
 check_conflict_status = st.button(label="Check Conflicts")
 if check_conflict_status:
-    conflict_list = zipfinder.checkEnemies(df3)
+    conflict_list = zipfinder.checkEnemies(user_selected_plants)
     conflict_list
+    
+food_bank_status = st.button(label="Check out nearby food banks")
+if food_bank_status:
+    food_banks = googlemaps.returnplaces(zip_input)
+    food_banks
+      
+ebay_status = st.button(label="Check out eBay products that will help you harvest these plants")
+if ebay_status:
+    for plant in user_selected_plants:
+        ebay_prods = ebaysearch.returnebay(plant)
+        ebay_prods
